@@ -11,7 +11,6 @@ import {
 
 const heroPortrait = "/assets/frankogenrwoth.webp";
 const aboutPortrait = "/assets/frankogenrwoth.webp";
-const aboutSquare = "/assets/about-square.jpg";
 const promoBanner = "/assets/promo-banner.jpg";
 const work1 = "/assets/work-1.jpg";
 const work2 = "/assets/work-2.jpg";
@@ -169,6 +168,13 @@ function Nav() {
     </header>
   );
 }
+
+const skillGroups = [
+  { label: "Languages", items: "Python, TypeScript, JavaScript, Java, C" },
+  { label: "Backend", items: "Django, FastAPI, Flask, Laravel" },
+  { label: "Frontend", items: "React, React Native" },
+  { label: "DevOps", items: "Linux, Bash, Git, cloud deploy, DNS" },
+];
 
 const experiences = [
   {
@@ -329,30 +335,19 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="flex h-full flex-col rounded-xl bg-background p-7">
-              <svg
-                viewBox="0 0 24 24"
-                className="size-8 text-foreground"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18" />
-              </svg>
-              <p className="mt-8 text-6xl font-medium tracking-tight md:text-7xl">4.33</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                CGPA in Bachelor of Software Engineering at Makerere University.
-              </p>
-              <Image
-                src={aboutSquare}
-                alt="Hands sketching wireframes in a notebook"
-                width={700}
-                height={700}
-                loading="lazy"
-                className="mt-auto size-28 rounded-lg object-cover grayscale"
-              />
+            <div className="flex h-full flex-col justify-center rounded-xl bg-background p-7">
+              <span className="text-5xl md:text-6xl" aria-hidden="true">
+                😁
+              </span>
+              <h3 className="mt-4 text-xl font-medium tracking-tight">Skills &amp; Tools</h3>
+              <dl className="mt-5 space-y-3 text-sm">
+                {skillGroups.map((group) => (
+                  <div key={group.label} className="grid grid-cols-[5.5rem_1fr] gap-3">
+                    <dt className="text-muted-foreground">{group.label}</dt>
+                    <dd className="leading-snug text-foreground">{group.items}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </Reveal>
 
@@ -373,11 +368,15 @@ export default function Home() {
             <ul className="mt-8 space-y-5 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Bachelor of Software Engineering at Makerere University, Kampala.
+                Bachelor of Software Engineering at Makerere University (Jul 2023 – Dec 2027).
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Full-stack engineer shipping Django, FastAPI, Flask and React applications.
+                Full-stack engineer across backend APIs, databases, React UIs, and production devops.
+              </li>
+              <li className="flex gap-3">
+                <span className="text-foreground">+</span>
+                Based in Kampala — shipping for startups, clinics, and university associations.
               </li>
             </ul>
           </Reveal>
