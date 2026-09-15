@@ -1,10 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 
-const heroPortrait = "/assets/hero-portrait.jpg";
-const aboutPortrait = "/assets/about-portrait.jpg";
+const heroPortrait = "/assets/frankogenrwoth.webp";
+const aboutPortrait = "/assets/frankogenrwoth.webp";
 const aboutSquare = "/assets/about-square.jpg";
 const promoBanner = "/assets/promo-banner.jpg";
 const work1 = "/assets/work-1.jpg";
@@ -15,6 +21,59 @@ const blog2 = "/assets/blog-2.jpg";
 const blog3 = "/assets/blog-3.jpg";
 
 const navLinks = ["About Me", "Portfolio", "Services", "Blog"];
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 36 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.35, ease: easeOut },
+  },
+};
+
+const stagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.2, delayChildren: 0.18 },
+  },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 1.06 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 1.5, ease: easeOut },
+  },
+};
+
+function Reveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div className={className}>{children}</div>;
+
+  return (
+    <motion.div
+      className={className}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function ArrowIcon({ className = "" }: { className?: string }) {
   return (
@@ -37,11 +96,13 @@ function ArrowIcon({ className = "" }: { className?: string }) {
 function ArrowButton({ size = "md" }: { size?: "sm" | "md" }) {
   const box = size === "sm" ? "size-8" : "size-11";
   return (
-    <span
-      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-hover:rotate-45`}
+    <motion.span
+      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground`}
+      whileHover={{ rotate: 45 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18 }}
     >
       <ArrowIcon className="size-4" />
-    </span>
+    </motion.span>
   );
 }
 
@@ -71,12 +132,18 @@ function Eyebrow({ label, dark = false }: { label: string; dark?: boolean }) {
 }
 
 function Nav() {
+  const reduce = useReducedMotion();
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-10 md:pt-6">
-      <nav className="pointer-events-auto mx-auto flex max-w-[1600px] items-center justify-between gap-6 rounded-full bg-primary px-5 py-3 text-primary-foreground md:px-8">
+      <motion.nav
+        className="pointer-events-auto mx-auto flex max-w-[1600px] items-center justify-between gap-6 rounded-full bg-primary px-5 py-3 text-primary-foreground md:px-8"
+        initial={reduce ? false : { y: -24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: easeOut, delay: 0.15 }}
+      >
         <div className="flex items-center gap-8">
           <a href="#hero" className="text-base font-semibold tracking-tight">
-            D<span className="text-muted-foreground">.</span>Nova
+            frankogenrwoth
           </a>
           <ul className="hidden items-center gap-6 text-sm text-primary-foreground/70 md:flex">
             {navLinks.map((l) => (
@@ -98,51 +165,44 @@ function Nav() {
           Book A Call
           <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </a>
-      </nav>
+      </motion.nav>
     </header>
   );
 }
 
 const experiences = [
   {
-    company: "FutureTech",
-    city: "Berlin, Germany",
-    range: "2022 — Present",
-    role: "Lead product designer shaping a multi-platform design system.",
+    company: "AIBOS Uganda",
+    city: "Kampala, Uganda",
+    range: "Dec 2024 — Jul 2025",
+    role: "Software Engineer / Project Lead",
     tags: [
-      { label: "UI/UX", active: true },
-      { label: "Branding", active: false },
+      { label: "Project Lead", active: true },
+      { label: "Full-Stack", active: false },
     ],
+    detail:
+      "Led projects from requirements analysis and system design through implementation, deployment and production support. Owned technical architecture and key engineering decisions, and coordinated teams through sprint planning, stand-ups and code reviews.",
     open: true,
   },
   {
-    company: "Lumen Studio",
-    city: "Lisbon, Portugal",
-    range: "2020 — 2022",
-    role: "Designed fintech onboarding flows for a Series-A startup.",
+    company: "Remote Squad",
+    city: "Kampala, Uganda",
+    range: "May 2023 — Jun 2026",
+    role: "Software Engineer",
     tags: [
-      { label: "Product", active: true },
-      { label: "Research", active: false },
+      { label: "Backend", active: true },
+      { label: "Full-Stack", active: false },
     ],
-    open: false,
-  },
-  {
-    company: "Northline",
-    city: "Oslo, Norway",
-    range: "2018 — 2020",
-    role: "Brand identity and web systems for retail clients.",
-    tags: [
-      { label: "Branding", active: true },
-      { label: "Web", active: false },
-    ],
+    detail:
+      "Designed and developed production web applications across frontend and backend — backend APIs, business logic, database integration, authentication and user interfaces — and resolved bugs, performance and deployment issues.",
     open: false,
   },
 ];
 
 const works = [
-  { img: work1, name: "Halo Digital", domain: "halodigital.xyz", client: "Halo Inc." },
-  { img: work2, name: "Ember Studio", domain: "emberstudio.io", client: "Ember" },
-  { img: work3, name: "Nimbus App", domain: "nimbus.app", client: "Nimbus Labs" },
+  { img: work1, name: "E-Voting Systems", domain: "linktr.ee/frankogenrwoth", client: "University Associations" },
+  { img: work2, name: "Freelance Web Development", domain: "linktr.ee/frankogenrwoth", client: "Kazib Valuers, DILD Clinic" },
+  { img: work3, name: "Music Sharing Application", domain: "github.com/frankogenrwoth", client: "Personal Project" },
 ];
 
 const posts = [
@@ -168,6 +228,7 @@ const posts = [
 
 export default function Home() {
   const [openRow, setOpenRow] = useState(0);
+  const reduce = useReducedMotion();
 
   return (
     <div className="snap-shell bg-background text-foreground">
@@ -179,45 +240,62 @@ export default function Home() {
           className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 flex-col gap-10 text-[11px] uppercase tracking-[0.28em] text-muted-foreground lg:flex"
           style={{ writingMode: "vertical-rl" }}
         >
-          <span>2024</span>
-          <span>Product designer</span>
+          <span>2026</span>
+          <span>Software engineer</span>
         </div>
 
         <div className="mx-auto grid w-full max-w-[1600px] items-center gap-10 pt-28 md:grid-cols-2 md:pt-24">
-          <div>
-            <div className="flex gap-12">
+          <motion.div
+            variants={reduce ? undefined : stagger}
+            initial={reduce ? false : "hidden"}
+            animate="visible"
+          >
+            <motion.div className="flex gap-12" variants={fadeUp}>
               <div>
-                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+200</p>
-                <p className="mt-1 text-sm text-muted-foreground">Project completed</p>
+                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+15</p>
+                <p className="mt-1 text-sm text-muted-foreground">Projects delivered</p>
               </div>
               <div>
-                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+50</p>
-                <p className="mt-1 text-sm text-muted-foreground">Startup raised</p>
+                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+5k</p>
+                <p className="mt-1 text-sm text-muted-foreground">Voters per election</p>
               </div>
-            </div>
+            </motion.div>
 
-            <h1 className="mt-10 text-[22vw] font-medium leading-[0.85] tracking-tight md:text-[13vw]">
+            <motion.h1
+              className="mt-10 text-[22vw] font-medium leading-[0.85] tracking-tight md:text-[13vw]"
+              variants={fadeUp}
+            >
               Hello
-            </h1>
-            <p className="mt-4 text-sm text-muted-foreground">
-              — It&apos;s D.Nova a design wizard
-            </p>
-          </div>
+            </motion.h1>
+            <motion.p className="mt-4 text-sm text-muted-foreground" variants={fadeUp}>
+              — It&apos;s frankogenrwoth a software engineer
+            </motion.p>
+          </motion.div>
 
-          <div className="relative h-[46vh] overflow-hidden rounded-xl md:h-[78vh]">
+          <motion.div
+            className="relative h-[46vh] overflow-hidden rounded-xl md:h-[78vh]"
+            variants={reduce ? undefined : scaleIn}
+            initial={reduce ? false : "hidden"}
+            animate="visible"
+          >
             <Image
               src={heroPortrait}
-              alt="Black and white portrait of D.Nova, product designer"
+              alt="Black and white portrait of frankogenrwoth, software engineer"
               width={1024}
               height={1408}
+              priority
               className="size-full object-cover grayscale"
             />
-          </div>
+          </motion.div>
         </div>
 
-        <span className="absolute bottom-6 left-4 text-xs uppercase tracking-[0.2em] text-muted-foreground md:left-20">
+        <motion.span
+          className="absolute bottom-6 left-4 text-xs uppercase tracking-[0.2em] text-muted-foreground md:left-20"
+          animate={reduce ? undefined : { y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
           Scroll down ↓
-        </span>
+        </motion.span>
       </section>
 
       {/* About */}
@@ -226,15 +304,16 @@ export default function Home() {
         className="snap-panel flex items-center bg-secondary px-4 py-24 md:px-20"
       >
         <div className="mx-auto grid w-full max-w-[1600px] gap-8 md:grid-cols-3">
-          <div>
+          <Reveal>
             <Eyebrow label="Who I am" />
             <h2 className="mt-5 text-4xl font-medium leading-[1.05] tracking-tight md:text-5xl">
               About Me
             </h2>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              I&apos;m a product designer working at the seam of research, systems and craft. For
-              nine years I&apos;ve helped founders turn rough ideas into interfaces people actually
-              finish using. My work is quiet, deliberate and built to scale.
+              I&apos;m Frank Ogenrwoth, a software engineer and full-stack developer studying at
+              Makerere University. I design and ship production web applications end to end — from
+              APIs and databases to the interfaces people use every day. My work is deliberate and
+              built to scale.
             </p>
             <svg
               viewBox="0 0 160 80"
@@ -247,39 +326,41 @@ export default function Home() {
               <path d="M4 8c50 0 96 18 120 56" strokeDasharray="4 6" />
               <path d="M116 52l10 14 14-8" />
             </svg>
-          </div>
+          </Reveal>
 
-          <div className="flex flex-col rounded-xl bg-background p-7">
-            <svg
-              viewBox="0 0 24 24"
-              className="size-8 text-foreground"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18" />
-            </svg>
-            <p className="mt-8 text-6xl font-medium tracking-tight md:text-7xl">120%</p>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Average increase in client engagement in the first 6 months.
-            </p>
-            <Image
-              src={aboutSquare}
-              alt="Hands sketching wireframes in a notebook"
-              width={700}
-              height={700}
-              loading="lazy"
-              className="mt-auto size-28 rounded-lg object-cover grayscale"
-            />
-          </div>
+          <Reveal delay={0.1}>
+            <div className="flex h-full flex-col rounded-xl bg-background p-7">
+              <svg
+                viewBox="0 0 24 24"
+                className="size-8 text-foreground"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18M12 3c3 3.4 3 14.6 0 18M12 3c-3 3.4-3 14.6 0 18" />
+              </svg>
+              <p className="mt-8 text-6xl font-medium tracking-tight md:text-7xl">4.33</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                CGPA in Bachelor of Software Engineering at Makerere University.
+              </p>
+              <Image
+                src={aboutSquare}
+                alt="Hands sketching wireframes in a notebook"
+                width={700}
+                height={700}
+                loading="lazy"
+                className="mt-auto size-28 rounded-lg object-cover grayscale"
+              />
+            </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={0.18}>
             <div className="relative w-fit">
               <Image
                 src={aboutPortrait}
-                alt="Portrait of D.Nova"
+                alt="Portrait of Frank Ogenrwoth"
                 width={900}
                 height={900}
                 loading="lazy"
@@ -292,14 +373,14 @@ export default function Home() {
             <ul className="mt-8 space-y-5 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Nine years designing products across fintech, health and climate tooling.
+                Bachelor of Software Engineering at Makerere University, Kampala.
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                I lead with research, prototype early, and hand off systems teams can maintain.
+                Full-stack engineer shipping Django, FastAPI, Flask and React applications.
               </li>
             </ul>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -309,24 +390,26 @@ export default function Home() {
         className="snap-panel flex items-center px-4 py-24 md:px-20"
       >
         <div className="mx-auto w-full max-w-[1600px]">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div>
-              <Eyebrow label="Experiences" />
-              <h2 className="mt-5 max-w-xl text-4xl font-medium leading-[1.05] tracking-tight md:text-6xl">
-                Explore My
-                <br />
-                Design Journey
-              </h2>
-            </div>
-            <div className="md:max-w-xs md:text-right">
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                A decade of building products with small teams and ambitious founders.
-              </p>
-              <div className="mt-4">
-                <TextLink label="Book A Call" />
+          <Reveal>
+            <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+              <div>
+                <Eyebrow label="Experiences" />
+                <h2 className="mt-5 max-w-xl text-4xl font-medium leading-[1.05] tracking-tight md:text-6xl">
+                  Explore My
+                  <br />
+                  Engineering Journey
+                </h2>
+              </div>
+              <div className="md:max-w-xs md:text-right">
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Two years of shipping production software for companies and university associations.
+                </p>
+                <div className="mt-4">
+                  <TextLink label="Book A Call" />
+                </div>
               </div>
             </div>
-          </div>
+          </Reveal>
 
           <div className="mt-12 border-t border-border">
             {experiences.map((e, i) => {
@@ -364,30 +447,38 @@ export default function Home() {
                     </div>
                   </button>
 
-                  {isOpen && (
-                    <div className="grid gap-6 pb-8 md:grid-cols-[1.1fr_1.4fr_auto] md:items-center">
-                      <div className="flex gap-3">
-                        {[work1, work2, work3].map((img, n) => (
-                          <Image
-                            key={n}
-                            src={img}
-                            alt={`${e.company} project thumbnail ${n + 1}`}
-                            width={900}
-                            height={1000}
-                            loading="lazy"
-                            className="h-20 w-24 rounded-lg object-cover"
-                          />
-                        ))}
-                      </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground">
-                        Rebuilt the core design system, shipped three platform launches and mentored
-                        a team of four designers.
-                      </p>
-                      <span className="group w-fit">
-                        <ArrowButton />
-                      </span>
-                    </div>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="detail"
+                        initial={reduce ? false : { height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: easeOut }}
+                        className="overflow-hidden"
+                      >
+                        <div className="grid gap-6 pb-8 md:grid-cols-[1.1fr_1.4fr_auto] md:items-center">
+                          <div className="flex gap-3">
+                            {[work1, work2, work3].map((img, n) => (
+                              <Image
+                                key={n}
+                                src={img}
+                                alt={`${e.company} project thumbnail ${n + 1}`}
+                                width={900}
+                                height={1000}
+                                loading="lazy"
+                                className="h-20 w-24 rounded-lg object-cover"
+                              />
+                            ))}
+                          </div>
+                          <p className="text-sm leading-relaxed text-muted-foreground">{e.detail}</p>
+                          <span className="group w-fit">
+                            <ArrowButton />
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}
@@ -397,10 +488,10 @@ export default function Home() {
 
       {/* Promo banner */}
       <section className="snap-panel flex items-center px-4 py-24 md:px-20">
-        <div className="relative mx-auto w-full max-w-[1600px] overflow-hidden rounded-2xl">
+        <Reveal className="relative mx-auto w-full max-w-[1600px] overflow-hidden rounded-2xl">
           <Image
             src={promoBanner}
-            alt="Model car and design sketches on a desk"
+            alt="Software engineer workspace"
             width={1600}
             height={912}
             loading="lazy"
@@ -409,20 +500,20 @@ export default function Home() {
           <div className="absolute inset-0 bg-primary/70" />
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-primary-foreground">
             <p className="text-xs uppercase tracking-[0.2em] text-primary-foreground/70">
-              (Book Your Free Consultation Now!)
+              (Get a Free Consultation!)
             </p>
             <h2 className="mt-5 max-w-3xl text-3xl font-medium leading-[1.1] tracking-tight md:text-5xl">
-              Exclusive Winter Deal Days Get a Free Consultation!
+              Let&apos;s Build Something Great Together!
             </h2>
             <p className="mt-4 max-w-lg text-sm text-primary-foreground/70">
-              Two weeks only — a full session on your product, your roadmap and the design work that
-              moves it forward.
+              From full-stack web apps to high-volume e-voting systems — tell me about your project
+              and I&apos;ll bring the architecture and a plan for the first sprint.
             </p>
             <div className="mt-7">
               <TextLink label="Let's talk" />
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* Portfolio */}
@@ -431,18 +522,32 @@ export default function Home() {
         className="snap-panel flex items-center bg-secondary px-4 py-24 md:px-20"
       >
         <div className="mx-auto w-full max-w-[1600px]">
-          <Eyebrow label="Portfolio" />
-          <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">Latest Works</h2>
+          <Reveal>
+            <Eyebrow label="Portfolio" />
+            <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">Latest Works</h2>
+          </Reveal>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <motion.div
+            className="mt-12 grid gap-8 md:grid-cols-3"
+            variants={reduce ? undefined : stagger}
+            initial={reduce ? false : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {works.map((w) => (
-              <article key={w.name} className="group">
+              <motion.article
+                key={w.name}
+                className="group"
+                variants={fadeUp}
+                whileHover={reduce ? undefined : { y: -6 }}
+                transition={{ type: "spring", stiffness: 280, damping: 22 }}
+              >
                 <div className="relative overflow-hidden rounded-xl">
                   <Image
                     src={w.img}
                     alt={`${w.name} project cover`}
-                    width={900}
-                    height={1000}
+                    width={600}
+                    height={600}
                     loading="lazy"
                     className="aspect-4/5 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -456,13 +561,18 @@ export default function Home() {
                 </div>
                 <p className="mt-4 text-base font-medium">{w.name}</p>
                 <p className="text-sm text-muted-foreground">For ↗ {w.client}</p>
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </motion.div>
 
           <div className="mt-12 text-center text-sm text-muted-foreground">
-            Check out More →{" "}
-            <a href="#portfolio" className="border-b border-foreground text-foreground">
+            Check out My Full Portfolio →{" "}
+            <a
+              href="https://linktr.ee/frankogenrwoth"
+              target="_blank"
+              rel="noreferrer"
+              className="border-b border-foreground text-foreground"
+            >
               View More
             </a>
           </div>
@@ -472,14 +582,22 @@ export default function Home() {
       {/* Blog */}
       <section id="blog" className="snap-panel flex items-center px-4 py-24 md:px-20">
         <div className="mx-auto w-full max-w-[1600px]">
-          <Eyebrow label="Blogs" />
-          <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">
-            Design Insights &amp; Trends
-          </h2>
+          <Reveal>
+            <Eyebrow label="Blogs" />
+            <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">
+              Design Insights &amp; Trends
+            </h2>
+          </Reveal>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <motion.div
+            className="mt-12 grid gap-8 md:grid-cols-3"
+            variants={reduce ? undefined : stagger}
+            initial={reduce ? false : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {posts.map((p) => (
-              <article key={p.tag} className="group">
+              <motion.article key={p.tag} className="group" variants={fadeUp}>
                 <Image
                   src={p.img}
                   alt={`${p.tag} article cover`}
@@ -495,9 +613,9 @@ export default function Home() {
                   <span className="text-xs text-muted-foreground">{p.read}</span>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -506,17 +624,19 @@ export default function Home() {
         id="contact"
         className="snap-panel flex flex-col items-center justify-center bg-secondary px-4 text-center md:px-20"
       >
-        <h2 className="max-w-3xl text-4xl font-medium leading-[1.05] tracking-tight md:text-6xl">
-          Got a Vision? Let&apos;s Bring It to Life!
-        </h2>
-        <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Tell me where the product is today and where it needs to go.
-          <br />
-          I&apos;ll bring the process, the craft and a plan for the first month.
-        </p>
-        <div className="mt-8">
-          <TextLink label="Book A Call" />
-        </div>
+        <Reveal className="flex flex-col items-center">
+          <h2 className="max-w-3xl text-4xl font-medium leading-[1.05] tracking-tight md:text-6xl">
+            Got a Vision? Let&apos;s Bring It to Life!
+          </h2>
+          <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Tell me what you&apos;re building and where it needs to go.
+            <br />
+            I&apos;ll bring the engineering, the architecture and a plan for the first sprint.
+          </p>
+          <div className="mt-8">
+            <TextLink label="Book A Call" />
+          </div>
+        </Reveal>
       </section>
 
       {/* Footer */}
@@ -536,12 +656,40 @@ export default function Home() {
               Blog
             </a>
           </nav>
-          <a
-            href="mailto:hello@dnova.com"
-            className="text-3xl font-medium tracking-tight md:text-5xl"
-          >
-            hello@dnova.com
-          </a>
+          <div className="flex flex-col items-start gap-4 md:items-end">
+            <div className="flex items-center gap-4 text-sm text-primary-foreground/70">
+              <a
+                href="https://github.com/frankogenrwoth"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-primary-foreground"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://linkedin.com/in/ogenrwoth-jim-frank"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-primary-foreground"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://linktr.ee/frankogenrwoth"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-primary-foreground"
+              >
+                Linktree
+              </a>
+            </div>
+            <a
+              href="mailto:ogenrwothjimfrank@gmail.com"
+              className="text-3xl font-medium tracking-tight md:text-5xl"
+            >
+              ogenrwothjimfrank@gmail.com
+            </a>
+          </div>
         </div>
       </footer>
     </div>

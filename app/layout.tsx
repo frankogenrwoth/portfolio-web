@@ -11,13 +11,13 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "D.Nova — Product Designer Portfolio",
+  title: "frankogenrwoth — Software Engineer",
   description:
-    "D.Nova is a product designer crafting monochrome, high-impact digital experiences for startups and brands.",
-  authors: [{ name: "D.Nova" }],
+    "frankogenrwoth is a full-stack software engineer building production web applications with Django, FastAPI, Flask and React.",
+  authors: [{ name: "Ogenrwoth Jim Frank" }],
   openGraph: {
-    title: "D.Nova — Product Designer Portfolio",
-    description: "Product design portfolio: selected works, experience and design insights.",
+    title: "frankogenrwoth — Software Engineer",
+    description: "Software engineering portfolio: projects, experience and engineering insights.",
     type: "website",
   },
   twitter: {
