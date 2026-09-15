@@ -548,7 +548,7 @@ export default function Home() {
                     width={600}
                     height={600}
                     loading="lazy"
-                    className="aspect-4/5 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 flex items-end justify-between p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <span className="flex items-center gap-2 rounded-full bg-background px-3 py-1 text-xs">
