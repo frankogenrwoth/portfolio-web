@@ -206,9 +206,27 @@ const experiences = [
 ];
 
 const works = [
-  { img: work1, name: "E-Voting Systems", domain: "linktr.ee/frankogenrwoth", client: "University Associations" },
-  { img: work2, name: "Freelance Web Development", domain: "linktr.ee/frankogenrwoth", client: "Kazib Valuers, DILD Clinic" },
-  { img: work3, name: "Music Sharing Application", domain: "github.com/frankogenrwoth", client: "Personal Project" },
+  {
+    img: work1,
+    name: "Kazi Valuers & Surveyors",
+    domain: "kazivaluersandsurveyors.co.ug",
+    href: "https://www.kazivaluersandsurveyors.co.ug",
+    client: "Kazi Valuers",
+  },
+  {
+    img: work2,
+    name: "DILD Clinic",
+    domain: "dildclinic.com",
+    href: "https://dildclinic.com",
+    client: "Digestive & Liver Disease Care Center",
+  },
+  {
+    img: work3,
+    name: "Nassy Property",
+    domain: "nassypropertyconsultants.com",
+    href: "https://www.nassypropertyconsultants.com",
+    client: "Land, Rentals & Airbnb in Jinja",
+  },
 ];
 
 export default function HomePage({ posts }: { posts: PostMeta[] }) {
@@ -520,25 +538,27 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
                 whileHover={reduce ? undefined : { y: -6 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
               >
-                <div className="relative overflow-hidden rounded-xl">
-                  <Image
-                    src={w.img}
-                    alt={`${w.name} project cover`}
-                    width={600}
-                    height={600}
-                    loading="lazy"
-                    className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex items-end justify-between p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <span className="flex items-center gap-2 rounded-full bg-background px-3 py-1 text-xs">
-                      Website
-                      <span className="text-muted-foreground">{w.domain}</span>
-                    </span>
-                    <ArrowButton size="sm" />
+                <a href={w.href} target="_blank" rel="noreferrer" className="block">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <Image
+                      src={w.img}
+                      alt={`${w.name} project cover`}
+                      width={600}
+                      height={600}
+                      loading="lazy"
+                      className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 flex items-end justify-between p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="flex items-center gap-2 rounded-full bg-background px-3 py-1 text-xs">
+                        Website
+                        <span className="text-muted-foreground">{w.domain}</span>
+                      </span>
+                      <ArrowButton size="sm" />
+                    </div>
                   </div>
-                </div>
-                <p className="mt-4 text-base font-medium">{w.name}</p>
-                <p className="text-sm text-muted-foreground">For ↗ {w.client}</p>
+                  <p className="mt-4 text-base font-medium">{w.name}</p>
+                  <p className="text-sm text-muted-foreground">For ↗ {w.client}</p>
+                </a>
               </motion.article>
             ))}
           </motion.div>
