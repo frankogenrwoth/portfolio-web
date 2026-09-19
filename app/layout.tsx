@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   description:
     "frankogenrwoth is a full-stack software engineer building production web applications with Django, FastAPI, Flask and React.",
   authors: [{ name: "Ogenrwoth Jim Frank" }],
+  verification: {
+    other: {
+      "google-adsense-account": "ca-pub-5639367802041023",
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },

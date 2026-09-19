@@ -10,7 +10,7 @@ import {
   type Variants,
 } from "framer-motion";
 
-import { PostGrid } from "@/components/post-grid";
+import { PostList } from "@/components/post-list";
 import { WorkGrid } from "@/components/work-grid";
 import type { PostMeta } from "@/lib/blog";
 import type { WorkMeta } from "@/lib/works";
@@ -214,7 +214,9 @@ export default function HomePage({
 }) {
   const [openRow, setOpenRow] = useState(0);
   const reduce = useReducedMotion();
-  const workCovers = works.slice(0, 3).map((w) => ({ bg: w.bg, cover: w.cover }));
+  const workCovers = works
+    .slice(0, 3)
+    .map((w) => ({ bg: w.bg, cover: w.cover }));
 
   return (
     <div className="snap-shell bg-background text-foreground">
@@ -566,7 +568,9 @@ export default function HomePage({
             </h2>
           </Reveal>
 
-          <PostGrid posts={posts.slice(0, 3)} />
+          <div className="">
+            <PostList posts={posts.slice(0, 5)} />
+          </div>
 
           <div className="mt-12 text-center text-sm text-muted-foreground">
             Check out All My Blog Posts →{" "}
@@ -669,4 +673,3 @@ export default function HomePage({
     </div>
   );
 }
-

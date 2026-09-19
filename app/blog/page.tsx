@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PostGrid } from "@/components/post-grid";
+import { PostList } from "@/components/post-list";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
@@ -29,16 +29,16 @@ export default function BlogIndexPage() {
         </div>
       </header>
 
-      <section className="bg-secondary px-4 py-24 md:px-20">
-        <div className="mx-auto w-full max-w-[1600px]">
-          <h1 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">
+      <section className="px-4 py-16 md:px-20 md:py-24">
+        <div className="mx-auto w-full max-w-3xl">
+          <h1 className="text-4xl font-medium tracking-tight md:text-6xl">
             All Posts
           </h1>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
             Design insights, engineering notes and experiments worth sharing.
           </p>
 
-          <PostGrid posts={posts} />
+          <PostList posts={posts} />
         </div>
       </section>
     </main>

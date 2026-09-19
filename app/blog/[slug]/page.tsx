@@ -40,7 +40,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border px-4 py-6 md:px-20">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <Link href="/#blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             ← Back to blog
           </Link>
           <Link href="/" className="text-sm font-semibold tracking-tight">

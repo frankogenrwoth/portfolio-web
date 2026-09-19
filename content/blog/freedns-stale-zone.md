@@ -1,124 +1,69 @@
-Every DNS problem gets blamed on propagation. Sometimes it really is just propagation. But every now and then, the truth is stranger: the control panel says one thing, the nameservers serve something else, and the two never meet.
+# When your DNS zone ignores itself
 
-This is the story of how a DNS hosting migration quietly broke DNS for a domain, and how we found and fixed it. Or: why `kazivaluersandsurveyors.co.ug` showed a Vercel IP one day, an old server IP the next, and nothing in the UI fixed it.
+Every DNS problem usually gets blamed on propagation. Sometimes it really is propagation. But every now and then the nameserver is serving one thing while your control panel is showing something else. It gets worse when your registrar does not manage the DNS records on the same platform. This is my story with registry.co.ug and Namecheap FreeDNS.
 
-## The setup
+## Getting you up to speed
 
-The domain was configured in Namecheap with FreeDNS nameservers (`freedns1`–`5.registrar-servers.com`). The Namecheap Advanced DNS panel showed the correct Vercel configuration:
+If you want a `.ug` domain, registry.co.ug is the main registry you deal with. Their customer care is honestly one of the best I have seen from a Ugandan company. The odd part for me was the DNS setup. At least for the old developer flow, DNS was not fully managed in the same place I expected. I needed to move things over to FreeDNS so I could actually access and control the records myself.
 
-- **A (root)** → `216.198.79.1`
-- **CNAME www** → `a2949a6e3e7c4d8a.vercel-dns-017.com`
+On day one I made the changes. I pointed the domain at FreeDNS and set the records for my Vercel app. It looked smooth at first. Then the update never showed up the way it should. I was closing in on the 48 hour window, and I knew the TTL windows I cared about should have expired by then. That is when I started digging.
 
-Everything looked right in the UI. The domain had even resolved to Vercel's IP before. Then, suspiciously, it reverted.
+## First surprise
 
-Queries to all five FreeDNS authoritative nameservers returned the old Namecheap hosting IP: `162.0.215.43`. Worse, the SOA record identified `dns1.namecheaphosting.com` as the primary nameserver — not a FreeDNS SOA at all.
+I ran `dig` and saw the site still resolving to the old IP. Not the Vercel one I had set. The previous DNS service records were still being served. Two days in, and public lookups still matched the old zone.
 
-And the domain panel said: "Your domain is being transferred."
+So I talked to both help centers. Everyone said things should be fine. Nothing changed. I had to dig deeper myself. The only real point of failure left was Namecheap FreeDNS. I called them, walked through my own debugging steps with them, and eventually it worked out. The headache of splitting registry, DNS hosting, and your app platform is not obvious until you are stuck in the middle of it.
 
-We never initiated a domain transfer.
+## What was actually wrong
 
-## The investigation
+On the surface everything looked correct in the FreeDNS panel. The records I wanted were there. The `.ug` registry delegation also looked right. It pointed at FreeDNS.
 
-The first step was to check each layer of the DNS chain independently. DNS is a chain, and the failure could be anywhere: the TLD registry delegation, the authoritative zone content, or recursive resolver caching.
+The problem was deeper. When I queried the FreeDNS nameservers directly, they were still serving an old imported zone from the previous hosting DNS. Old A record. Old SOA. Even old NS records inside the zone that pointed somewhere else.
 
-### Layer 1: The TLD delegation (`.co.ug` registry)
+So the registry said FreeDNS was in charge. FreeDNS said it was authoritative. And the zone FreeDNS was serving described a different nameserver entirely. That is not propagation. That is a stale zone that never got republished.
 
-Querying the registry nameservers directly told us where the domain should find its answers:
+The panel even showed a message that the domain was "being transferred." I never started a domain transfer. On Namecheap, moving from their hosting DNS over to FreeDNS can get labeled like that. The UI updates and the live zone were not the same thing.
 
-```bash
-$ dig @193.0.9.52 kazivaluersandsurveyors.co.ug NS +norecurse +noall +authority
+## Why "just wait for propagation" was the wrong answer
 
-kazivaluersandsurveyors.co.ug. 3600 IN NS freedns1.registrar-servers.com.
-kazivaluersandsurveyors.co.ug. 3600 IN NS freedns2.registrar-servers.com.
-...
-```
+Propagation syncs copies of a zone. It does not invent a new published zone for you.
 
-All five `.co.ug` registry nameservers correctly delegated to FreeDNS. Layer 1 was fine.
+In this case:
 
-### Layer 2: The authoritative zone (FreeDNS servers)
+- The registry delegation was already correct
+- The authoritative answers were wrong and inconsistent with the panel
+- Waiting longer would not rewrite what FreeDNS was actually serving
 
-This is where it unraveled. Querying the FreeDNS servers directly — bypassing any recursion or caching — returned the old zone:
+When the control panel and the authoritative servers disagree, stop waiting on the network. Someone's backend has not published the zone.
 
-```bash
-$ dig @freedns1.registrar-servers.com kazivaluersandsurveyors.co.ug A +noall +answer
-kazivaluersandsurveyors.co.ug. 14400 IN A 162.0.215.43
+## How it got fixed
 
-$ dig @freedns1.registrar-servers.com kazivaluersandsurveyors.co.ug SOA +noall +answer
-kazivaluersandsurveyors.co.ug. 1800000 IN SOA dns1.namecheaphosting.com. cpanel.tech.namecheap.com. ...
-```
+Namecheap support said they had fixed the zone. Checking again showed the same SOA serial. If the serial does not move, the zone did not republish.
 
-Every one of the five FreeDNS servers returned the identical stale zone — the old A record, the old SOA, and even the old NS records inside the zone pointing to `dns1`/`dns2.namecheaphosting.com`.
+The workaround that actually worked was adding a harmless TXT record. That forced a zone revision. The SOA serial bumped, FreeDNS republished, and the A record finally matched what I had set for Vercel. Resolvers caught up after that.
 
-The `aa` (Authoritative Answer) flag was set. FreeDNS considered itself authoritative — for a zone that described itself as belonging to a completely different nameserver. The domain was delegated to FreeDNS, but the zone FreeDNS was serving described a different nameserver entirely.
+## What I took away
 
-### Layer 3: Public resolvers
+1. Never trust the DNS panel alone. Query the authoritative servers yourself.
+2. Watch the SOA serial. If you change a record and the serial stays the same, nothing published.
+3. Migrations can leave behind imported "zombie" zones. If the in-zone NS records do not match the delegation, that is a red flag.
+4. "It is propagation" is a hypothesis, not a diagnosis.
+5. Sometimes a tiny record change is what forces the backend to republish.
 
-Google (`8.8.8.8`) and Cloudflare (`1.1.1.1`) both returned the old IP. That much was expected — they were following the delegation and caching what the authoritative servers gave them.
+## Quick checks
 
-## The root cause: a zombie zone
-
-The panel displayed the domain status as "Your domain is being transferred." But we had never initiated a transfer — we had only changed nameservers. The clue was the message itself: on Namecheap, switching from Namecheap Hosting DNS to FreeDNS is an internal DNS hosting migration, and their panel labels that a "transfer."
-
-Here's what was going on:
-
-1. The domain previously lived on Namecheap Hosting (`dns1`/`dns2.namecheaphosting.com`, old IP `162.0.215.43`).
-2. The nameservers were changed to FreeDNS.
-3. The registry delegation updated correctly — all five `.co.ug` servers point to FreeDNS.
-4. But FreeDNS's zone for the domain had been auto-imported from the old hosting nameservers: the old A record, the old SOA (`dns1.namecheaphosting.com`), even the old in-zone NS records.
-5. The migration's "being transferred" state left the zone in limbo. Records edited in the UI were never republished. The imported zone kept being served — recently enough that the SOA serial had refreshed the day before.
-
-One person, acting with perfect correctness — updating the delegates and the UI to Vercel — was fighting a zombie zone that pure delegation couldn't touch.
-
-## Why "it'll propagate" was the wrong answer
-
-This is the part worth understanding deeply. Ordinary propagation could not explain this, because:
-
-- The delegation (Layer 1) was already correct. Nothing was propagating.
-- The authoritative zone (Layer 2) was internally contradictory: FreeDNS declared itself authoritative for a zone whose SOA and NS records pointed to another nameserver.
-- The UI showed different records than the zone being served. Propagation syncs zones; it doesn't hallucinate new ones.
-
-When authoritative servers serve different data than the control panel shows, you're not waiting on the network. You're waiting on someone's backend to actually publish the zone.
-
-## The resolution
-
-Namecheap support confirmed the delegation and said they'd "fixed the zone" — but verification showed every FreeDNS server returning the same unchanged SOA serial. An unchanged serial means an unrepublished zone; no fix had landed.
-
-The workaround they suggested — adding any TXT record — was the actual fix. It forced a zone revision on their backend, which bumped the SOA serial and republished the zone.
-
-After adding a placeholder TXT record:
+If you ever suspect a stale zone:
 
 ```bash
-$ dig @freedns1.registrar-servers.com kazivaluersandsurveyors.co.ug A +noall +answer
-kazivaluersandsurveyors.co.ug. 1799 IN A 216.198.79.1
-
-$ dig @freedns1.registrar-servers.com kazivaluersandsurveyors.co.ug SOA +noall +answer
-kazivaluersandsurveyors.co.ug. 3601 IN SOA freedns1.registrar-servers.com. hostmaster.registrar-servers.com. ...
-```
-
-The new SOA belonged to FreeDNS. The A record was Vercel's Anycast IP. Cloudflare's resolver updated almost immediately; Google's followed after its cached TTL expired.
-
-## Lessons learned
-
-1. **Never trust the DNS panel alone.** The control panel is a config UI; the zone on the wire is reality. Query the authoritative servers directly.
-2. **Learn to read the SOA.** The serial is the zone's version number. If you change a record and the serial doesn't change, your zone was never published.
-3. **DNS misconfigurations create zombies.** When a DNS platform migrates hosting, it may auto-import the old zone. Check for in-zone NS records that don't match the delegation — a red flag for an imported zone.
-4. **"It's propagation" is a hypothesis, not a diagnosis.** Propagation is expected. An internally-contradictory authoritative answer is an incident.
-5. **Sometimes a harmless record change is the fix.** A zone that won't publish can often be kicked by adding (or removing) any record, forcing a rebuild.
-
-## The debugging one-liner
-
-If you ever suspect a stale zone, here's the fastest diagnosis:
-
-```bash
-# 1. Check the delegation — what does the registry say?
+# 1. What does the registry say?
 dig @193.0.9.52 YOURDOMAIN NS +norecurse +noall +authority
 
-# 2. Query the authoritative servers directly — bypass all caching
+# 2. Ask FreeDNS directly, no recursion
 dig @freedns1.registrar-servers.com YOURDOMAIN SOA +noall +answer
-dig @freedns1.registrar-servers.com YOURDOMAIN NS +noall +answer
+dig @freedns1.registrar-servers.com YOURDOMAIN A +noall +answer
 
-# 3. Compare the zone's own NS records to the delegation
-# If they don't match, you have a stale or imported zone
+# 3. Compare the zone NS records to the delegation
+# If they do not match, you likely have a stale or imported zone
 ```
 
-If the SOA references nameservers you didn't pick, and the A record is an IP you never set, you've found your zombie. Don't wait for propagation — get the zone republished.
+If the SOA points at nameservers you did not choose, and the A record is an IP you never set, you found the zombie. Do not wait for propagation. Get the zone republished.
