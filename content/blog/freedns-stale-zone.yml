@@ -1,0 +1,6 @@
+title: When Your DNS Zone Ignores Itself
+tag: ENGINEERING
+date: 2026-09-19
+cover: /assets/blog/freedns-stale-zone.jpg
+excerpt: When your DNS zone ignores itself — a real-world FreeDNS stale zone investigation.
+draft: false

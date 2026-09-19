@@ -10,14 +10,14 @@ import {
   type Variants,
 } from "framer-motion";
 
+import { PostGrid } from "@/components/post-grid";
+import { WorkGrid } from "@/components/work-grid";
 import type { PostMeta } from "@/lib/blog";
+import type { WorkMeta } from "@/lib/works";
 
 const heroPortrait = "/assets/frankogenrwoth.webp";
 const aboutPortrait = "/assets/frankogenrwoth.webp";
 const promoBanner = "/assets/promo-banner.jpg";
-const work1 = "/assets/work-1.jpg";
-const work2 = "/assets/work-2.jpg";
-const work3 = "/assets/work-3.jpg";
 
 const navLinks = ["About Me", "Portfolio", "Services", "Blog"];
 
@@ -205,40 +205,26 @@ const experiences = [
   },
 ];
 
-const works = [
-  {
-    img: work1,
-    name: "Kazi Valuers & Surveyors",
-    domain: "kazivaluersandsurveyors.co.ug",
-    href: "https://www.kazivaluersandsurveyors.co.ug",
-    client: "Kazi Valuers",
-  },
-  {
-    img: work2,
-    name: "DILD Clinic",
-    domain: "dildclinic.com",
-    href: "https://dildclinic.com",
-    client: "Digestive & Liver Disease Care Center",
-  },
-  {
-    img: work3,
-    name: "Nassy Property",
-    domain: "nassypropertyconsultants.com",
-    href: "https://www.nassypropertyconsultants.com",
-    client: "Land, Rentals & Airbnb in Jinja",
-  },
-];
-
-export default function HomePage({ posts }: { posts: PostMeta[] }) {
+export default function HomePage({
+  posts,
+  works,
+}: {
+  posts: PostMeta[];
+  works: WorkMeta[];
+}) {
   const [openRow, setOpenRow] = useState(0);
   const reduce = useReducedMotion();
+  const workCovers = works.slice(0, 3).map((w) => ({ bg: w.bg, cover: w.cover }));
 
   return (
     <div className="snap-shell bg-background text-foreground">
       <Nav />
 
       {/* Hero */}
-      <section id="hero" className="snap-panel relative flex flex-col justify-center px-4 md:px-20">
+      <section
+        id="hero"
+        className="snap-panel relative flex flex-col justify-center px-4 md:px-20"
+      >
         <div
           className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 flex-col gap-10 text-[11px] uppercase tracking-[0.28em] text-muted-foreground lg:flex"
           style={{ writingMode: "vertical-rl" }}
@@ -255,12 +241,20 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
           >
             <motion.div className="flex gap-12" variants={fadeUp}>
               <div>
-                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+15</p>
-                <p className="mt-1 text-sm text-muted-foreground">Projects delivered</p>
+                <p className="text-4xl font-semibold tracking-tight md:text-5xl">
+                  +15
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Projects delivered
+                </p>
               </div>
               <div>
-                <p className="text-4xl font-semibold tracking-tight md:text-5xl">+5k</p>
-                <p className="mt-1 text-sm text-muted-foreground">Voters per election</p>
+                <p className="text-4xl font-semibold tracking-tight md:text-5xl">
+                  +5k
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Voters per election
+                </p>
               </div>
             </motion.div>
 
@@ -270,7 +264,10 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
             >
               Hello
             </motion.h1>
-            <motion.p className="mt-4 text-sm text-muted-foreground" variants={fadeUp}>
+            <motion.p
+              className="mt-4 text-sm text-muted-foreground"
+              variants={fadeUp}
+            >
               — It&apos;s frankogenrwoth a software engineer
             </motion.p>
           </motion.div>
@@ -313,9 +310,10 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
               About Me
             </h2>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              I&apos;m Frank Ogenrwoth, a software engineer and full-stack developer studying at
-              Makerere University. I design and ship production web applications end to end — from
-              APIs and databases to the interfaces people use every day. My work is deliberate and
+              I&apos;m Frank Ogenrwoth, a software engineer and full-stack
+              developer studying at Makerere University. I design and ship
+              production web applications end to end — from APIs and databases
+              to the interfaces people use every day. My work is deliberate and
               built to scale.
             </p>
             <svg
@@ -336,12 +334,19 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
               <span className="text-5xl md:text-6xl" aria-hidden="true">
                 😁
               </span>
-              <h3 className="mt-4 text-xl font-medium tracking-tight">Skills &amp; Tools</h3>
+              <h3 className="mt-4 text-xl font-medium tracking-tight">
+                Skills &amp; Tools
+              </h3>
               <dl className="mt-5 space-y-3 text-sm">
                 {skillGroups.map((group) => (
-                  <div key={group.label} className="grid grid-cols-[5.5rem_1fr] gap-3">
+                  <div
+                    key={group.label}
+                    className="grid grid-cols-[5.5rem_1fr] gap-3"
+                  >
                     <dt className="text-muted-foreground">{group.label}</dt>
-                    <dd className="leading-snug text-foreground">{group.items}</dd>
+                    <dd className="leading-snug text-foreground">
+                      {group.items}
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -365,15 +370,18 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
             <ul className="mt-8 space-y-5 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Bachelor of Software Engineering at Makerere University (Jul 2023 – Dec 2027).
+                Bachelor of Software Engineering at Makerere University (Jul
+                2023 – Dec 2027).
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Full-stack engineer across backend APIs, databases, React UIs, and production devops.
+                Full-stack engineer across backend APIs, databases, React UIs,
+                and production devops.
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Based in Kampala — shipping for startups, clinics, and university associations.
+                Based in Kampala — shipping for startups, clinics, and
+                university associations.
               </li>
             </ul>
           </Reveal>
@@ -398,7 +406,8 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
               </div>
               <div className="md:max-w-xs md:text-right">
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Two years of shipping production software for companies and university associations.
+                  Two years of shipping production software for companies and
+                  university associations.
                 </p>
                 <div className="mt-4">
                   <TextLink label="Book A Call" />
@@ -419,7 +428,8 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
                   >
                     <div>
                       <p className="text-lg font-medium">
-                        {e.company}, <span className="text-muted-foreground">{e.city}</span>
+                        {e.company},{" "}
+                        <span className="text-muted-foreground">{e.city}</span>
                       </p>
                       <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                         <span className="size-1.5 rounded-full bg-current" />
@@ -455,19 +465,22 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
                       >
                         <div className="grid gap-6 pb-8 md:grid-cols-[1.1fr_1.4fr_auto] md:items-center">
                           <div className="flex gap-3">
-                            {[work1, work2, work3].map((img, n) => (
+                            {workCovers.map((img, n) => (
                               <Image
-                                key={n}
-                                src={img}
+                                key={img.cover}
+                                src={img.cover}
                                 alt={`${e.company} project thumbnail ${n + 1}`}
                                 width={900}
                                 height={1000}
                                 loading="lazy"
-                                className="h-20 w-24 rounded-lg object-cover"
+                                className="h-20 w-24 rounded-lg object-contain object-center"
+                                style={{ backgroundColor: img.bg }}
                               />
                             ))}
                           </div>
-                          <p className="text-sm leading-relaxed text-muted-foreground">{e.detail}</p>
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {e.detail}
+                          </p>
                           <span className="group w-fit">
                             <ArrowButton />
                           </span>
@@ -502,8 +515,9 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
               Let&apos;s Build Something Great Together!
             </h2>
             <p className="mt-4 max-w-lg text-sm text-primary-foreground/70">
-              From full-stack web apps to high-volume e-voting systems — tell me about your project
-              and I&apos;ll bring the architecture and a plan for the first sprint.
+              From full-stack web apps to high-volume e-voting systems — tell me
+              about your project and I&apos;ll bring the architecture and a plan
+              for the first sprint.
             </p>
             <div className="mt-7">
               <TextLink label="Let's talk" />
@@ -520,65 +534,30 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
         <div className="mx-auto w-full max-w-[1600px]">
           <Reveal>
             <Eyebrow label="Portfolio" />
-            <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">Latest Works</h2>
+            <h2 className="mt-5 text-4xl font-medium tracking-tight md:text-6xl">
+              Latest Works
+            </h2>
           </Reveal>
 
-          <motion.div
-            className="mt-12 grid gap-8 md:grid-cols-3"
-            variants={reduce ? undefined : stagger}
-            initial={reduce ? false : "hidden"}
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {works.map((w) => (
-              <motion.article
-                key={w.name}
-                className="group"
-                variants={fadeUp}
-                whileHover={reduce ? undefined : { y: -6 }}
-                transition={{ type: "spring", stiffness: 280, damping: 22 }}
-              >
-                <a href={w.href} target="_blank" rel="noreferrer" className="block">
-                  <div className="relative overflow-hidden rounded-xl">
-                    <Image
-                      src={w.img}
-                      alt={`${w.name} project cover`}
-                      width={600}
-                      height={600}
-                      loading="lazy"
-                      className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 flex items-end justify-between p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      <span className="flex items-center gap-2 rounded-full bg-background px-3 py-1 text-xs">
-                        Website
-                        <span className="text-muted-foreground">{w.domain}</span>
-                      </span>
-                      <ArrowButton size="sm" />
-                    </div>
-                  </div>
-                  <p className="mt-4 text-base font-medium">{w.name}</p>
-                  <p className="text-sm text-muted-foreground">For ↗ {w.client}</p>
-                </a>
-              </motion.article>
-            ))}
-          </motion.div>
+          <WorkGrid works={works.slice(0, 3)} />
 
           <div className="mt-12 text-center text-sm text-muted-foreground">
             Check out My Full Portfolio →{" "}
-            <a
-              href="https://linktr.ee/frankogenrwoth"
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href="/work"
               className="border-b border-foreground text-foreground"
             >
               View More
-            </a>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Blog */}
-      <section id="blog" className="snap-panel flex items-center px-4 py-24 md:px-20">
+      <section
+        id="blog"
+        className="snap-panel flex items-center px-4 py-24 md:px-20"
+      >
         <div className="mx-auto w-full max-w-[1600px]">
           <Reveal>
             <Eyebrow label="Blogs" />
@@ -587,37 +566,17 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
             </h2>
           </Reveal>
 
-          <motion.div
-            className="mt-12 grid gap-8 md:grid-cols-3"
-            variants={reduce ? undefined : stagger}
-            initial={reduce ? false : "hidden"}
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {posts.map((p) => (
-              <motion.article key={p.slug} className="group" variants={fadeUp}>
-                <Link href={`/blog/${p.slug}`} className="block">
-                  <Image
-                    src={p.cover}
-                    alt={`${p.title} cover`}
-                    width={900}
-                    height={700}
-                    loading="lazy"
-                    className="aspect-4/3 w-full rounded-xl object-cover"
-                  />
-                  <div className="mt-4 flex items-center gap-3">
-                    <span className="rounded-full bg-primary px-3 py-1 text-[11px] tracking-[0.12em] text-primary-foreground">
-                      {p.tag}
-                    </span>
-                    <span className="text-xs text-muted-foreground">{p.readingTime}</span>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground">
-                    {p.excerpt}
-                  </p>
-                </Link>
-              </motion.article>
-            ))}
-          </motion.div>
+          <PostGrid posts={posts.slice(0, 3)} />
+
+          <div className="mt-12 text-center text-sm text-muted-foreground">
+            Check out All My Blog Posts →{" "}
+            <Link
+              href="/blog"
+              className="border-b border-foreground text-foreground"
+            >
+              View More
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -633,7 +592,8 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
           <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
             Tell me what you&apos;re building and where it needs to go.
             <br />
-            I&apos;ll bring the engineering, the architecture and a plan for the first sprint.
+            I&apos;ll bring the engineering, the architecture and a plan for the
+            first sprint.
           </p>
           <div className="mt-8">
             <TextLink label="Book A Call" />
@@ -645,16 +605,28 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
       <footer className="snap-end-panel footer-grid bg-primary px-4 py-16 text-primary-foreground md:px-20">
         <div className="mx-auto flex max-w-[1600px] flex-col justify-between gap-10 md:flex-row md:items-end">
           <nav className="flex flex-wrap items-center gap-2 text-sm">
-            <a href="#hero" className="rounded-full bg-primary-foreground/15 px-4 py-2">
+            <a
+              href="#hero"
+              className="rounded-full bg-primary-foreground/15 px-4 py-2"
+            >
               Home
             </a>
-            <a href="#about-me" className="rounded-full px-4 py-2 text-primary-foreground/70">
+            <a
+              href="#about-me"
+              className="rounded-full px-4 py-2 text-primary-foreground/70"
+            >
               About Me
             </a>
-            <a href="#portfolio" className="rounded-full px-4 py-2 text-primary-foreground/70">
+            <a
+              href="#portfolio"
+              className="rounded-full px-4 py-2 text-primary-foreground/70"
+            >
               Portfolio
             </a>
-            <a href="#blog" className="rounded-full px-4 py-2 text-primary-foreground/70">
+            <a
+              href="#blog"
+              className="rounded-full px-4 py-2 text-primary-foreground/70"
+            >
               Blog
             </a>
           </nav>
@@ -697,3 +669,4 @@ export default function HomePage({ posts }: { posts: PostMeta[] }) {
     </div>
   );
 }
+
