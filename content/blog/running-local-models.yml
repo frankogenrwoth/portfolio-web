@@ -1,0 +1,6 @@
+title: Running Local Models on 8GB Apple Silicon
+tag: ENGINEERING
+date: 2026-09-20
+cover: /assets/blog/mac-book-btm-boiling.webp
+excerpt: Whisper, TTS, MLX, and why big local chat models are a bad deal on a fanless 8GB Mac.
+draft: false
