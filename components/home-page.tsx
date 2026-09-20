@@ -180,7 +180,7 @@ const experiences = [
   {
     company: "AIBOS Uganda",
     city: "Kampala, Uganda",
-    range: "Dec 2024 — Jul 2025",
+    range: "Dec 2024 to Jul 2025",
     role: "Software Engineer / Project Lead",
     tags: [
       { label: "Project Lead", active: true },
@@ -193,14 +193,14 @@ const experiences = [
   {
     company: "Remote Squad",
     city: "Kampala, Uganda",
-    range: "May 2023 — Jun 2026",
+    range: "May 2023 to Jun 2026",
     role: "Software Engineer",
     tags: [
       { label: "Backend", active: true },
       { label: "Full-Stack", active: false },
     ],
     detail:
-      "Designed and developed production web applications across frontend and backend — backend APIs, business logic, database integration, authentication and user interfaces — and resolved bugs, performance and deployment issues.",
+      "Designed and developed production web applications across frontend and backend, including backend APIs, business logic, database integration, authentication and user interfaces, and resolved bugs, performance and deployment issues.",
     open: false,
   },
 ];
@@ -270,7 +270,7 @@ export default function HomePage({
               className="mt-4 text-sm text-muted-foreground"
               variants={fadeUp}
             >
-              — It&apos;s frankogenrwoth a software engineer
+              It&apos;s frankogenrwoth, a software engineer
             </motion.p>
           </motion.div>
 
@@ -314,7 +314,7 @@ export default function HomePage({
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
               I&apos;m Frank Ogenrwoth, a software engineer and full-stack
               developer studying at Makerere University. I design and ship
-              production web applications end to end — from APIs and databases
+              production web applications end to end, from APIs and databases
               to the interfaces people use every day. My work is deliberate and
               built to scale.
             </p>
@@ -373,7 +373,7 @@ export default function HomePage({
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
                 Bachelor of Software Engineering at Makerere University (Jul
-                2023 – Dec 2027).
+                2023 to Dec 2027).
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
@@ -382,7 +382,7 @@ export default function HomePage({
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Based in Kampala — shipping for startups, clinics, and
+                Based in Kampala, shipping for startups, clinics, and
                 university associations.
               </li>
             </ul>
@@ -517,7 +517,7 @@ export default function HomePage({
               Let&apos;s Build Something Great Together!
             </h2>
             <p className="mt-4 max-w-lg text-sm text-primary-foreground/70">
-              From full-stack web apps to high-volume e-voting systems — tell me
+              From full-stack web apps to high-volume e-voting systems. Tell me
               about your project and I&apos;ll bring the architecture and a plan
               for the first sprint.
             </p>

@@ -5,9 +5,9 @@ import { PostList } from "@/components/post-list";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog — frankogenrwoth",
+  title: "Blog | frankogenrwoth",
   description:
-    "Full list of blog posts by frankogenrwoth — design insights, engineering notes and experiments.",
+    "Full list of blog posts by frankogenrwoth: design insights, engineering notes and experiments.",
 };
 
 export default function BlogIndexPage() {

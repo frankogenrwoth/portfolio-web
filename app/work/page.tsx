@@ -5,9 +5,9 @@ import { WorkGrid } from "@/components/work-grid";
 import { getAllWorks } from "@/lib/works";
 
 export const metadata: Metadata = {
-  title: "Portfolio — frankogenrwoth",
+  title: "Portfolio | frankogenrwoth",
   description:
-    "Full list of projects by frankogenrwoth — production web applications for clinics, property consultancies and startups.",
+    "Full list of projects by frankogenrwoth: production web applications for clinics, property consultancies and startups.",
 };
 
 export default function WorksPage() {
@@ -35,7 +35,7 @@ export default function WorksPage() {
             My Projects
           </h1>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Everything I&apos;ve shipped — from clinic sites to property
+            Everything I&apos;ve shipped, from clinic sites to property
             consultancies.
           </p>
 

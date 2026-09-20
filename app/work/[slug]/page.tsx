@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: WorkPageProps) {
   if (!work) return { title: "Work not found" };
 
   return {
-    title: `${work.title} — frankogenrwoth`,
+    title: `${work.title} | frankogenrwoth`,
     description: work.excerpt,
     openGraph: {
       title: work.title,

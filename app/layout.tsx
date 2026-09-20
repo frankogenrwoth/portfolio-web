@@ -11,7 +11,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "frankogenrwoth — Software Engineer",
+  title: "frankogenrwoth | Software Engineer",
   description:
     "frankogenrwoth is a full-stack software engineer building production web applications with Django, FastAPI, Flask and React.",
   authors: [{ name: "Ogenrwoth Jim Frank" }],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "frankogenrwoth — Software Engineer",
+    title: "frankogenrwoth | Software Engineer",
     description: "Software engineering portfolio: projects, experience and engineering insights.",
     type: "website",
   },

@@ -1,6 +1,6 @@
 ## Problem
 
-A personal site had to do two jobs at once: present a body of work as a portfolio while documenting the thinking behind it as a blog — both without feeling like a template.
+A personal site had to do two jobs at once: present a body of work as a portfolio while documenting the thinking behind it as a blog, both without feeling like a template.
 
 ## Approach
 
@@ -8,4 +8,4 @@ Designed around scroll-snapped full-viewport sections so browsing feels like mov
 
 ## Result
 
-A portfolio that reads as a single artifact — the same site that presents the projects also demonstrates the craft: fast, deliberate, and quiet enough to let the work speak.
+A portfolio that reads as a single artifact. The same site that presents the projects also demonstrates the craft: fast, deliberate, and quiet enough to let the work speak.

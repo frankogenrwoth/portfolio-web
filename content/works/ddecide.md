@@ -1,6 +1,6 @@
 ## The problem
 
-Organisations run on decisions, but the way those decisions are made is usually invisible — threads, calls, documents, no single source of truth.
+Organisations run on decisions, but the way those decisions are made is usually invisible: threads, calls, documents, no single source of truth.
 
 ## The approach
 
@@ -8,4 +8,4 @@ DDecide turns proposal → discussion → verdict into one auditable flow. Every
 
 ## The outcome
 
-A clean, accountable path from idea to decision — with the trail of how you got there always one click away.
+A clean, accountable path from idea to decision, with the trail of how you got there always one click away.

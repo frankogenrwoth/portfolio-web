@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: BlogPageProps) {
   if (!post) return { title: "Post not found" };
 
   return {
-    title: `${post.title} — frankogenrwoth`,
+    title: `${post.title} | frankogenrwoth`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
