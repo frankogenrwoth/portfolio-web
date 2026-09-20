@@ -314,8 +314,8 @@ export default function HomePage({
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
               I&apos;m Frank Ogenrwoth, a software engineer and full-stack
               developer studying at Makerere University. I design and ship
-              production web applications end to end, from APIs and databases
-              to the interfaces people use every day. My work is deliberate and
+              production web applications end to end, from APIs and databases to
+              the interfaces people use every day. My work is deliberate and
               built to scale.
             </p>
             <svg
@@ -382,8 +382,8 @@ export default function HomePage({
               </li>
               <li className="flex gap-3">
                 <span className="text-foreground">+</span>
-                Based in Kampala, shipping for startups, clinics, and
-                university associations.
+                Based in Kampala, shipping for startups, clinics, and university
+                associations.
               </li>
             </ul>
           </Reveal>
@@ -644,6 +644,7 @@ export default function HomePage({
               >
                 GitHub
               </a>
+
               <a
                 href="https://linkedin.com/in/ogenrwoth-jim-frank"
                 target="_blank"
@@ -652,6 +653,16 @@ export default function HomePage({
               >
                 LinkedIn
               </a>
+
+              <a
+                href="https://x.com/frankogenrwoth"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-primary-foreground"
+              >
+                X
+              </a>
+
               <a
                 href="https://linktr.ee/frankogenrwoth"
                 target="_blank"
