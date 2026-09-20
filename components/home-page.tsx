@@ -252,10 +252,10 @@ export default function HomePage({
               </div>
               <div>
                 <p className="text-4xl font-semibold tracking-tight md:text-5xl">
-                  +5k
+                  +20k
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Voters per election
+                  Users supported
                 </p>
               </div>
             </motion.div>
