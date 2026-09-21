@@ -108,13 +108,13 @@ function ArrowButton({ size = "md" }: { size?: "sm" | "md" }) {
 
 function TextLink({ label }: { label: string }) {
   return (
-    <a
+    <Link
       href="/contact"
       className="group inline-flex items-center gap-1 border-b border-current pb-0.5 text-sm font-medium transition-opacity hover:opacity-60"
     >
       {label}
       <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-    </a>
+    </Link>
   );
 }
 
@@ -158,13 +158,13 @@ function Nav() {
             ))}
           </ul>
         </div>
-        <a
+        <Link
           href="/contact"
           className="group inline-flex items-center gap-1 border-b border-primary-foreground/60 pb-0.5 text-sm"
         >
           Book A Call
           <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </a>
+        </Link>
       </motion.nav>
     </header>
   );
@@ -608,30 +608,36 @@ export default function HomePage({
       <footer className="snap-end-panel footer-grid bg-primary px-4 py-16 text-primary-foreground md:px-20">
         <div className="mx-auto flex max-w-[1600px] flex-col justify-between gap-10 md:flex-row md:items-end">
           <nav className="flex flex-wrap items-center gap-2 text-sm">
-            <a
-              href="#hero"
+            <Link
+              href="/"
               className="rounded-full bg-primary-foreground/15 px-4 py-2"
             >
               Home
-            </a>
+            </Link>
             <a
               href="#about-me"
               className="rounded-full px-4 py-2 text-primary-foreground/70"
             >
               About Me
             </a>
-            <a
-              href="#portfolio"
+            <Link
+              href="/work"
               className="rounded-full px-4 py-2 text-primary-foreground/70"
             >
               Portfolio
-            </a>
-            <a
-              href="#blog"
+            </Link>
+            <Link
+              href="/blog"
               className="rounded-full px-4 py-2 text-primary-foreground/70"
             >
               Blog
-            </a>
+            </Link>
+            <Link
+              href="/contact"
+              className="rounded-full px-4 py-2 text-primary-foreground/70"
+            >
+              Contact
+            </Link>
           </nav>
           <div className="flex flex-col items-start gap-4 md:items-end">
             <div className="flex items-center gap-4 text-sm text-primary-foreground/70">
@@ -671,12 +677,12 @@ export default function HomePage({
                 Linktree
               </a>
             </div>
-            <a
+            <Link
               href="/contact"
               className="text-3xl font-medium tracking-tight md:text-5xl"
             >
               {contactEmail}
-            </a>
+            </Link>
           </div>
         </div>
       </footer>

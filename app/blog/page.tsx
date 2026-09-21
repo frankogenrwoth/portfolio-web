@@ -3,11 +3,28 @@ import Link from "next/link";
 
 import { PostList } from "@/components/post-list";
 import { getAllPosts } from "@/lib/blog";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Blog | frankogenrwoth",
+  title: "Blog",
   description:
-    "Full list of blog posts by frankogenrwoth: design insights, engineering notes and experiments.",
+    "Engineering notes and experiments from frankogenrwoth: DNS, local AI, and shipping production software.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Blog | frankogenrwoth",
+    description:
+      "Engineering notes and experiments from frankogenrwoth: DNS, local AI, and shipping production software.",
+    url: absoluteUrl("/blog"),
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | frankogenrwoth",
+    description:
+      "Engineering notes and experiments from frankogenrwoth: DNS, local AI, and shipping production software.",
+  },
 };
 
 export default function BlogIndexPage() {

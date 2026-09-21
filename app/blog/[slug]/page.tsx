@@ -1,10 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import {
+  JsonLd,
+  articleJsonLd,
+  breadcrumbJsonLd,
+} from "@/components/json-ld";
 import { getPost, getPostSlugs } from "@/lib/blog";
+import { AUTHOR, absoluteUrl } from "@/lib/site";
 
 type BlogPageProps = {
   params: Promise<{ slug: string }>;
@@ -14,19 +21,40 @@ export function generateStaticParams() {
   return getPostSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: BlogPageProps) {
+export async function generateMetadata({
+  params,
+}: BlogPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return { title: "Post not found" };
 
+  const url = absoluteUrl(`/blog/${post.slug}`);
+
   return {
-    title: `${post.title} | frankogenrwoth`,
+    title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url,
       type: "article",
-      images: [post.cover],
+      publishedTime: post.date || undefined,
+      authors: [AUTHOR.name],
+      images: [
+        {
+          url: absoluteUrl(post.cover),
+          alt: `${post.title} cover`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [absoluteUrl(post.cover)],
     },
   };
 }
@@ -38,10 +66,30 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <JsonLd
+        data={[
+          articleJsonLd({
+            title: post.title,
+            description: post.excerpt,
+            slug: post.slug,
+            cover: post.cover,
+            date: post.date,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]),
+        ]}
+      />
+
       <header className="border-b border-border px-4 py-6 md:px-20">
-        <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <Link href="/blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            ← Back to blog
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between">
+          <Link
+            href="/blog"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            ← All posts
           </Link>
           <Link href="/" className="text-sm font-semibold tracking-tight">
             frankogenrwoth
@@ -50,14 +98,35 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
       </header>
 
       <article className="mx-auto max-w-3xl px-4 py-12 md:px-0 md:py-16">
-        <div className="flex items-center gap-3">
+        <nav
+          aria-label="Breadcrumb"
+          className="text-xs text-muted-foreground"
+        >
+          <ol className="flex flex-wrap items-center gap-2">
+            <li>
+              <Link href="/" className="hover:text-foreground">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link href="/blog" className="hover:text-foreground">
+                Blog
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li className="text-foreground">{post.tag}</li>
+          </ol>
+        </nav>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-primary px-3 py-1 text-[11px] tracking-[0.12em] text-primary-foreground">
             {post.tag}
           </span>
           <span className="text-xs text-muted-foreground">{post.readingTime}</span>
           {post.date ? (
             <time className="text-xs text-muted-foreground" dateTime={post.date}>
-              {post.date}
+              Published {post.date}
             </time>
           ) : null}
         </div>
@@ -66,10 +135,20 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
           {post.title}
         </h1>
 
+        <p className="mt-4 text-sm text-muted-foreground">
+          Written by{" "}
+          <a
+            href={AUTHOR.url}
+            className="border-b border-foreground text-foreground"
+          >
+            {AUTHOR.name}
+          </a>
+        </p>
+
         <div className="relative mt-10 overflow-hidden rounded-xl">
           <Image
             src={post.cover}
-            alt=""
+            alt={`${post.title} cover image`}
             width={1200}
             height={800}
             priority

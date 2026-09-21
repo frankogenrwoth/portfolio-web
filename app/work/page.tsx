@@ -2,12 +2,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { WorkGrid } from "@/components/work-grid";
+import { absoluteUrl } from "@/lib/site";
 import { getAllWorks } from "@/lib/works";
 
 export const metadata: Metadata = {
-  title: "Portfolio | frankogenrwoth",
+  title: "Portfolio",
   description:
-    "Full list of projects by frankogenrwoth: production web applications for clinics, property consultancies and startups.",
+    "Selected projects by frankogenrwoth: production web applications for clinics, property consultancies and startups.",
+  alternates: {
+    canonical: "/work",
+  },
+  openGraph: {
+    title: "Portfolio | frankogenrwoth",
+    description:
+      "Selected projects by frankogenrwoth: production web applications for clinics, property consultancies and startups.",
+    url: absoluteUrl("/work"),
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portfolio | frankogenrwoth",
+    description:
+      "Selected projects by frankogenrwoth: production web applications for clinics, property consultancies and startups.",
+  },
 };
 
 export default function WorksPage() {
@@ -45,4 +62,3 @@ export default function WorksPage() {
     </main>
   );
 }
-

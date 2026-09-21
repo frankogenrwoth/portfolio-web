@@ -2,11 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ContactForm } from "@/components/contact-form";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact | frankogenrwoth",
+  title: "Contact",
   description:
-    "Send a short intro to frankogenrwoth. Name, a brief, then a call within 24 hours.",
+    "Send a short intro to frankogenrwoth. Share your name and a brief, then schedule a call within 24 hours.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact | frankogenrwoth",
+    description:
+      "Send a short intro to frankogenrwoth. Share your name and a brief, then schedule a call within 24 hours.",
+    url: absoluteUrl("/contact"),
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact | frankogenrwoth",
+    description:
+      "Send a short intro to frankogenrwoth. Share your name and a brief, then schedule a call within 24 hours.",
+  },
 };
 
 export default function ContactPage() {

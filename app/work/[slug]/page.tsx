@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import {
+  JsonLd,
+  breadcrumbJsonLd,
+  creativeWorkJsonLd,
+} from "@/components/json-ld";
+import { absoluteUrl } from "@/lib/site";
 import { getWork, getWorkSlugs } from "@/lib/works";
 
 type WorkPageProps = {
@@ -14,19 +21,38 @@ export function generateStaticParams() {
   return getWorkSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: WorkPageProps) {
+export async function generateMetadata({
+  params,
+}: WorkPageProps): Promise<Metadata> {
   const { slug } = await params;
   const work = getWork(slug);
   if (!work) return { title: "Work not found" };
 
+  const url = absoluteUrl(`/work/${work.slug}`);
+
   return {
-    title: `${work.title} | frankogenrwoth`,
+    title: work.title,
     description: work.excerpt,
+    alternates: {
+      canonical: `/work/${work.slug}`,
+    },
     openGraph: {
       title: work.title,
       description: work.excerpt,
+      url,
       type: "article",
-      images: [work.cover],
+      images: [
+        {
+          url: absoluteUrl(work.cover),
+          alt: `${work.title} project cover`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: work.title,
+      description: work.excerpt,
+      images: [absoluteUrl(work.cover)],
     },
   };
 }
@@ -38,13 +64,32 @@ export default async function WorkPage({ params }: WorkPageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <JsonLd
+        data={[
+          creativeWorkJsonLd({
+            title: work.title,
+            description: work.excerpt,
+            slug: work.slug,
+            cover: work.cover,
+            date: work.date,
+            href: work.href,
+            client: work.client,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Portfolio", path: "/work" },
+            { name: work.title, path: `/work/${work.slug}` },
+          ]),
+        ]}
+      />
+
       <header className="border-b border-border px-4 py-6 md:px-20">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link
-            href="/#portfolio"
+            href="/work"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            ← Back to portfolio
+            ← All projects
           </Link>
           <Link href="/" className="text-sm font-semibold tracking-tight">
             frankogenrwoth
@@ -53,7 +98,28 @@ export default async function WorkPage({ params }: WorkPageProps) {
       </header>
 
       <article className="mx-auto max-w-3xl px-4 py-12 md:px-0 md:py-16">
-        <div className="flex flex-wrap items-center gap-3">
+        <nav
+          aria-label="Breadcrumb"
+          className="text-xs text-muted-foreground"
+        >
+          <ol className="flex flex-wrap items-center gap-2">
+            <li>
+              <Link href="/" className="hover:text-foreground">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link href="/work" className="hover:text-foreground">
+                Portfolio
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li className="text-foreground">{work.title}</li>
+          </ol>
+        </nav>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-primary px-3 py-1 text-[11px] tracking-[0.12em] text-primary-foreground">
             Website
           </span>
@@ -71,12 +137,12 @@ export default async function WorkPage({ params }: WorkPageProps) {
         <p className="mt-3 text-sm text-muted-foreground">For ↗ {work.client}</p>
 
         <div
-          className="relative overflow-hidden rounded-xl"
+          className="relative mt-10 overflow-hidden rounded-xl"
           style={{ backgroundColor: work.bg }}
         >
           <Image
             src={work.cover}
-            alt=""
+            alt={`${work.title} project cover`}
             width={1200}
             height={800}
             priority
