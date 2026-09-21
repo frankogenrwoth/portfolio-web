@@ -13,6 +13,7 @@ import {
 import { PostList } from "@/components/post-list";
 import { WorkGrid } from "@/components/work-grid";
 import type { PostMeta } from "@/lib/blog";
+import { contactEmail } from "@/lib/contact";
 import type { WorkMeta } from "@/lib/works";
 
 const heroPortrait = "/assets/frankogenrwoth.webp";
@@ -108,7 +109,7 @@ function ArrowButton({ size = "md" }: { size?: "sm" | "md" }) {
 function TextLink({ label }: { label: string }) {
   return (
     <a
-      href="#contact"
+      href="/contact"
       className="group inline-flex items-center gap-1 border-b border-current pb-0.5 text-sm font-medium transition-opacity hover:opacity-60"
     >
       {label}
@@ -158,7 +159,7 @@ function Nav() {
           </ul>
         </div>
         <a
-          href="#contact"
+          href="/contact"
           className="group inline-flex items-center gap-1 border-b border-primary-foreground/60 pb-0.5 text-sm"
         >
           Book A Call
@@ -594,13 +595,11 @@ export default function HomePage({
             Got a Vision? Let&apos;s Bring It to Life!
           </h2>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
-            Tell me what you&apos;re building and where it needs to go.
-            <br />
-            I&apos;ll bring the engineering, the architecture and a plan for the
-            first sprint.
+            Start with a short intro. Tell me who you are and what you have in
+            mind, and we will take it from there.
           </p>
           <div className="mt-8">
-            <TextLink label="Book A Call" />
+            <TextLink label="Reach out" />
           </div>
         </Reveal>
       </section>
@@ -673,10 +672,10 @@ export default function HomePage({
               </a>
             </div>
             <a
-              href="mailto:ogenrwothjimfrank@gmail.com"
+              href="/contact"
               className="text-3xl font-medium tracking-tight md:text-5xl"
             >
-              ogenrwothjimfrank@gmail.com
+              {contactEmail}
             </a>
           </div>
         </div>
